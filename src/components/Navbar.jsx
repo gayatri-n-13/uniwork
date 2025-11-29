@@ -3,7 +3,7 @@ import "../styles/Navbar.css";
 
 export default function Navbar({ username, onSignOut }) {
   return (
-    <nav className="navbar">
+    <nav className="nav">
       <div className="nav-left">UNIWORK</div>
 
       <div className="nav-center">

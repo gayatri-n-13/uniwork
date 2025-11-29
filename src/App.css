@@ -12,36 +12,6 @@
 
 /* Nav */
 
-.nav {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  height: 60px;
-  background: #f7f0e9;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 40px;
-  border-bottom: 1px solid #e2d8cc;
-}
-
-.nav-left {
-  font-size: 22px;
-  letter-spacing: 2px;
-}
-
-.nav-center {
-  font-size: 14px;
-}
-
-.nav-btn {
-  background: #9b6436;
-  color: white;
-  border: none;
-  padding: 8px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-}
 
 /* Sections */
 
