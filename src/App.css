@@ -1,0 +1,154 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Georgia", "Times New Roman", serif;
+}
+
+.page {
+  background: #f5f1ea;
+  min-height: 100vh;
+}
+
+/* Nav */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  height: 60px;
+  background: #f7f0e9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  border-bottom: 1px solid #e2d8cc;
+}
+
+.nav-left {
+  font-size: 22px;
+  letter-spacing: 2px;
+}
+
+.nav-center {
+  font-size: 14px;
+}
+
+.nav-btn {
+  background: #9b6436;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Sections */
+
+.hero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 120px 20px;
+}
+
+.hero-brown {
+  background: #a5734b;
+  color: white;
+}
+
+.hero-beige {
+  background: #e1d7c8;
+  color: #2b2116;
+  text-align: left;
+}
+
+.hero-content {
+  max-width: 780px;
+}
+
+.hero-left {
+  align-items: flex-start;
+}
+
+.hero h1 {
+  font-size: 42px;
+  margin-bottom: 16px;
+}
+
+.hero p {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+/* Buttons */
+
+.primary-btn {
+  background: #9b6436;
+  color: white;
+  border: none;
+  padding: 12px 26px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Footer area on first view */
+
+.footer-strip {
+  background: #e8dfd1;
+  display: flex;
+  justify-content: space-between;
+  padding: 40px 80px;
+  gap: 40px;
+}
+
+.footer-col h4 {
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.footer-col p {
+  font-size: 13px;
+  line-height: 1.5;
+  margin-bottom: 4px;
+}
+
+.footer-bottom {
+  background: #e8dfd1;
+  text-align: center;
+  padding: 16px 0 40px;
+  font-size: 12px;
+  border-top: 1px solid #d3c8b7;
+}
+
+/* Second section text styles */
+
+.uniwork-title {
+  font-size: 56px;
+  letter-spacing: 3px;
+}
+
+.subtitle {
+  font-size: 22px;
+  margin: 10px 0 26px;
+}
+
+.body-text {
+  font-size: 15px;
+  max-width: 420px;
+  line-height: 1.7;
+  margin-bottom: 26px;
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #f5f1ea; /* same as your page background */
+}
+
+#root {
+  min-height: 100vh;
+  width: 100%;
+}

@@ -1,0 +1,45 @@
+.nav {
+    width: 100%;
+    background: #f5efe7;
+    padding: 16px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .nav-left {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+  }
+  
+  .nav-logo {
+    font-size: 22px;
+    font-weight: bold;
+    color: #8a6a54;
+  }
+  
+  .nav-links span {
+    margin-right: 20px;
+    cursor: pointer;
+    color: #8a6a54;
+  }
+  
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .username {
+    color: #8a6a54;
+  }
+  
+  .signout-btn {
+    padding: 6px 14px;
+    background: white;
+    border: 1px solid #8a6a54;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  
