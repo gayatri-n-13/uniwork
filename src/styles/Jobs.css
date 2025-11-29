@@ -134,3 +134,12 @@
   margin-top: 10px;
   cursor: pointer;
 }
+.add-job-btn {
+  padding: 10px 20px;
+  background: #8a6a54;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  cursor: pointer;
+}

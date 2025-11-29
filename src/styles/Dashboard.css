@@ -58,4 +58,28 @@
     background: #a8744f;
     color: white;
   }
+  .applications-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+  }
+  
+  .app-item {
+    background: #ffffff;
+    padding: 14px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    border: 1px solid #ddd0c5;
+    font-size: 14px;
+  }
+  
+  .app-job {
+    color: #8a6a54;
+    font-weight: 600;
+  }
+  
+  .app-date {
+    font-size: 12px;
+    color: #6e5b4b;
+  }
   

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "../styles/Navbar.css";
 
 export default function Navbar({ username, onSignOut }) {
@@ -7,10 +8,10 @@ export default function Navbar({ username, onSignOut }) {
       <div className="nav-left">UNIWORK</div>
 
       <div className="nav-center">
-        <a href="/">Home</a>
-        <a href="/dashboard">Dashboard</a>
-        <a href="/jobs">Jobs</a>
-        <a href="/profile">Profile</a>
+        <Link to="/dashboard">Home</Link>
+        <Link to="/dashboard">Dashboard</Link>
+        <Link to="/jobs">Jobs</Link>
+        <Link to="/profile">Profile</Link>
       </div>
 
       <div className="nav-right">

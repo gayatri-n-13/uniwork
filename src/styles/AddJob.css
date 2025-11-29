@@ -1,0 +1,49 @@
+.addjob-page {
+  padding: 30px;
+  background: #f7f3ed;
+  min-height: 100vh;
+}
+
+.addjob-title {
+  color: #8a6a54;
+  font-size: 32px;
+  margin-left: 20px;
+}
+
+.addjob-container {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  width: 60%;
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.addjob-input,
+.addjob-textarea {
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid #c9b9a4;
+}
+
+.addjob-textarea {
+  height: 120px;
+  resize: none;
+}
+
+.submitjob-btn {
+  background: #8a6a54;
+  color: white;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.success-text {
+  color: green;
+  margin-left: 20px;
+  font-weight: bold;
+}

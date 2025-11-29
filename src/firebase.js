@@ -1,28 +1,21 @@
 // src/firebase.js
 import { initializeApp } from "firebase/app";
-import {
-  getAuth,
-  GoogleAuthProvider,
-  OAuthProvider,
-  signInWithPopup
-} from "firebase/auth";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyAKi82c74YOFwoD0mM1JgMOolpkFkprBQ0",
+  authDomain: "uniwork-59ed3.firebaseapp.com",
+  projectId: "uniwork-59ed3",
+  storageBucket: "uniwork-59ed3.firebasestorage.app",
+  messagingSenderId: "11609735566",
+  appId: "1:11609735566:web:b9ee8e4790162f5086a4df",
+  measurementId: "G-9QQNJTK2G6"
 };
 
 const app = initializeApp(firebaseConfig);
+
 export const auth = getAuth(app);
-
-// Providers
-export const googleProvider = new GoogleAuthProvider();
-export const appleProvider = new OAuthProvider("apple.com");
-
-// Sign-in functions
-export const signInWithGoogle = () => signInWithPopup(auth, googleProvider);
-export const signInWithApple = () => signInWithPopup(auth, appleProvider);
+export const db = getFirestore(app);
+export const storage = getStorage(app);

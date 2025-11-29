@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../UniWorkLanding.css";
 
+// Firebase login service
+import { login } from "../services/authService";
+
 export default function UniWorkLanding() {
   const [showModal, setShowModal] = useState(false);
 
@@ -9,32 +12,30 @@ export default function UniWorkLanding() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const navigate = useNavigate(); // <-- required for redirect
+  const navigate = useNavigate();
 
   const openModal = () => setShowModal(true);
   const closeModal = () => setShowModal(false);
 
-  // LOGIN VALIDATION + REDIRECT
-  const handleLogin = () => {
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const usernamePattern = /^[a-zA-Z0-9._-]+$/;
+  // ==========================
+  // REAL FIREBASE LOGIN LOGIC
+  // ==========================
+  const handleLogin = async () => {
+    try {
+      if (!email || !password) {
+        alert("Please fill all fields.");
+        return;
+      }
 
-    const isEmailValid = emailPattern.test(email);
-    const isUsernameValid = usernamePattern.test(email);
+      await login(email, password);
 
-    if (!isEmailValid && !isUsernameValid) {
-      alert("Please enter a valid email or username.");
-      return;
+      closeModal();
+      navigate("/dashboard");
+
+    } catch (error) {
+      console.error(error);
+      alert("Invalid email or password. Please try again.");
     }
-
-    if (password.length < 4) {
-      alert("Password must be at least 4 characters.");
-      return;
-    }
-
-    // SUCCESS → go to logged-in homepage
-    closeModal();
-    navigate("/dashboard");
   };
 
   return (
@@ -43,15 +44,25 @@ export default function UniWorkLanding() {
       {/* NAVBAR */}
       <nav className="navbar">
         <div className="navbar-brand">UNIWORK🎓</div>
+
         <div className="nav-links">
-          <span>Home</span>
+          <span onClick={() => navigate("/")}>Home</span>
         </div>
-        <button className="navbar-button" onClick={openModal}>
-          Sign In
-        </button>
+
+        <div className="nav-right">
+          {/* SIGN UP ADDED */}
+          <button className="navbar-button" onClick={() => navigate("/signup")}>
+            Sign Up
+          </button>
+
+          {/* SIGN IN MODAL BUTTON */}
+          <button className="navbar-button" onClick={openModal}>
+            Sign In
+          </button>
+        </div>
       </nav>
 
-      {/* HERO 1 (GIF background) */}
+      {/* HERO SECTION WITH GIF */}
       <section className="hero-1">
         <div className="hero-overlay">
           <div className="hero-left">
@@ -62,17 +73,18 @@ export default function UniWorkLanding() {
               Welcome to your all-in-one Work-Study Portal — where opportunities meet efficiency.
               Students can discover exciting job listings, apply with ease, and track progress every
               step of the way. Admins can post jobs, review applications, approve hours, and share
-              feedback — all from one seamless dashboard. Fast. Transparent. Hassle-free.
+              feedback — all from one seamless dashboard.
             </p>
 
-            <button className="hero-button" onClick={openModal}>
+            {/* GET STARTED → GO TO SIGNUP */}
+            <button className="hero-button" onClick={() => navigate("/signup")}>
               Get Started →
             </button>
+
           </div>
         </div>
       </section>
 
-      
       {/* FOOTER */}
       <footer className="footer">
         <div>
@@ -112,7 +124,7 @@ export default function UniWorkLanding() {
 
             <input
               type="text"
-              placeholder="Email or Username"
+              placeholder="Email"
               className="input-field"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
