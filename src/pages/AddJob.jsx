@@ -1,72 +1,69 @@
 import React, { useState } from "react";
 import "../styles/AddJob.css";
-import Navbar from "../components/Navbar";
 
 export default function AddJob() {
-
   const [title, setTitle] = useState("");
   const [dept, setDept] = useState("");
-  const [location, setLocation] = useState("");
-  const [pay, setPay] = useState("");
-  const [hours, setHours] = useState("");
   const [desc, setDesc] = useState("");
+  const [wage, setWage] = useState("");
+  const [hours, setHours] = useState("");
+  const [location, setLocation] = useState("");
+  const [deadline, setDeadline] = useState("");
+  const [success, setSuccess] = useState(false);
 
   const handleSubmit = () => {
-    if (!title || !dept || !location || !pay || !hours || !desc) {
-      alert("Please fill all fields.");
+    if (!title || !dept || !desc) {
+      alert("Please fill all required fields.");
       return;
     }
 
-    // Load existing jobs
-    let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
-
-    // Create new job
+    // Create job object
     const newJob = {
       id: Date.now(),
       title,
       dept,
-      location,
-      pay,
-      hours,
       desc,
+      wage,
+      hours,
+      location,
+      deadline
     };
 
+    // Load existing jobs
+    const existing = JSON.parse(localStorage.getItem("jobs")) || [];
+
+    // Add new job
+    const updatedJobs = [...existing, newJob];
+
     // Save to localStorage
-    jobs.push(newJob);
-    localStorage.setItem("jobs", JSON.stringify(jobs));
+    localStorage.setItem("jobs", JSON.stringify(updatedJobs));
 
-    alert("Job submitted successfully!");
+    setSuccess(true);
 
-    // Clear form
-    setTitle("");
-    setDept("");
-    setLocation("");
-    setPay("");
-    setHours("");
-    setDesc("");
+    // Redirect back to jobs page
+    setTimeout(() => {
+      window.location.href = "/jobs";
+    }, 800);
   };
 
   return (
-    <div>
-      <Navbar />
+    <div className="addjob-page">
+      <h1 className="addjob-title">Create a Job Posting</h1>
+
       <div className="addjob-container">
-        <h1>Add New Job</h1>
+        <input className="addjob-input" placeholder="Job Title*" value={title} onChange={(e) => setTitle(e.target.value)} />
+        <input className="addjob-input" placeholder="Department*" value={dept} onChange={(e) => setDept(e.target.value)} />
+        <textarea className="addjob-textarea" placeholder="Job Description*" value={desc} onChange={(e) => setDesc(e.target.value)} />
+        <input className="addjob-input" placeholder="Wage (e.g., $15/hr)" value={wage} onChange={(e) => setWage(e.target.value)} />
+        <input className="addjob-input" placeholder="Hours per week" value={hours} onChange={(e) => setHours(e.target.value)} />
+        <input className="addjob-input" placeholder="Location" value={location} onChange={(e) => setLocation(e.target.value)} />
+        <input className="addjob-input" placeholder="Deadline (MM/DD/YYYY)" value={deadline} onChange={(e) => setDeadline(e.target.value)} />
 
-        <div className="addjob-box">
-          <input className="addjob-input" placeholder="Job Title" value={title} onChange={(e) => setTitle(e.target.value)} />
+        <button className="submitjob-btn" onClick={handleSubmit}>
+          Submit Job
+        </button>
 
-          <input className="addjob-input" placeholder="Department" value={dept} onChange={(e) => setDept(e.target.value)} />
-
-          <input className="addjob-input" placeholder="Location" value={location} onChange={(e) => setLocation(e.target.value)} />
-
-          <input className="addjob-input" placeholder="Pay Rate" value={pay} onChange={(e) => setPay(e.target.value)} />
-
-          <input className="addjob-input" placeholder="Hours per Week" value={hours} onChange={(e) => setHours(e.target.value)} />
-
-          <textarea className="addjob-textarea" placeholder="Job Description" value={desc} onChange={(e) => setDesc(e.target.value)} />
-
-          <button className="addjob-btn" onClick={handleSubmit}>Submit Job</button>
-        </div>
+        {success && <p className="success-text">Job posted successfully!</p>}
       </div>
     </div>
   );

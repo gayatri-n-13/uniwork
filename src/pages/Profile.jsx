@@ -1,67 +1,122 @@
-import React, { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
+import React, { useState, useEffect } from "react";
 import "../styles/Profile.css";
 
-import { auth, db } from "../firebase";
-import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
-
 export default function Profile() {
-  const navigate = useNavigate();
+  const [editMode, setEditMode] = useState(false);
 
-  const [user, setUser] = useState(null);          // Firebase user object
-  const [profile, setProfile] = useState(null);    // Firestore profile data
-  const [loading, setLoading] = useState(true);    // Loader
+  const [profile, setProfile] = useState({
+    photo: "",
+    name: "",
+    email: "",
+    address: "",
+    phone: "",
+    major: "",
+    role: "",
+  });
 
-  // Step 1 — Wait for Firebase Auth to load
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (u) => {
-      if (!u) {
-        // user not logged in → redirect
-        navigate("/");
-        return;
-      }
+    const savedUser = JSON.parse(localStorage.getItem("user"));
+    const savedProfile = JSON.parse(localStorage.getItem("profile"));
 
-      setUser(u);
-
-      // Step 2 — Get Firestore profile
-      const ref = doc(db, "users", u.uid);
-      const snap = await getDoc(ref);
-
-      if (snap.exists()) {
-        setProfile(snap.data());
-      } else {
-        setProfile({ name: u.displayName, email: u.email });
-      }
-
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
+    if (savedProfile) {
+      setProfile(savedProfile);
+    } else if (savedUser) {
+      setProfile((prev) => ({
+        ...prev,
+        name: savedUser.name,
+        email: savedUser.email,
+        role: savedUser.role,
+      }));
+    }
   }, []);
 
-  if (loading) {
-    return <p className="profile-loading">Loading profile...</p>;
-  }
+  const handleSave = () => {
+    localStorage.setItem("profile", JSON.stringify(profile));
+    setEditMode(false);
+  };
 
   return (
     <div className="profile-page">
-      <Navbar username={user.displayName || user.email} />
 
-      <div className="profile-container">
+      <div className="profile-card">
 
-        <h1 className="profile-title">My Profile</h1>
-        <p className="profile-sub">Manage your personal and account details</p>
+        {/* Profile Photo */}
+        <div className="profile-photo-wrapper">
+          {profile.photo ? (
+            <img src={profile.photo} alt="Profile" className="profile-photo" />
+          ) : (
+            <div className="profile-photo placeholder">No Photo</div>
+          )}
 
-        <div className="profile-card">
-          <p><strong>Name:</strong> {profile?.name || user.displayName}</p>
-          <p><strong>Email:</strong> {profile?.email || user.email}</p>
-          <p><strong>Account Created:</strong> 
-            {profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString() : "N/A"}
-          </p>
+          {editMode && (
+            <input
+              type="text"
+              placeholder="Photo URL"
+              value={profile.photo}
+              onChange={(e) =>
+                setProfile({ ...profile, photo: e.target.value })
+              }
+              className="profile-input"
+            />
+          )}
         </div>
 
+        {/* Profile Info */}
+        <div className="profile-info">
+          {!editMode ? (
+            <>
+              <p><strong>Name:</strong> {profile.name || "—"}</p>
+              <p><strong>Email:</strong> {profile.email || "—"}</p>
+              <p><strong>Address:</strong> {profile.address || "—"}</p>
+              <p><strong>Phone:</strong> {profile.phone || "—"}</p>
+              <p><strong>Major / Department:</strong> {profile.major || "—"}</p>
+              <p><strong>Role:</strong> {profile.role || "—"}</p>
+
+              <button className="edit-btn" onClick={() => setEditMode(true)}>
+                Edit Profile
+              </button>
+            </>
+          ) : (
+            <>
+              <input
+                className="profile-input"
+                placeholder="Full Name"
+                value={profile.name}
+                onChange={(e) =>
+                  setProfile({ ...profile, name: e.target.value })
+                }
+              />
+              <input
+                className="profile-input"
+                placeholder="Address"
+                value={profile.address}
+                onChange={(e) =>
+                  setProfile({ ...profile, address: e.target.value })
+                }
+              />
+              <input
+                className="profile-input"
+                placeholder="Phone Number"
+                value={profile.phone}
+                onChange={(e) =>
+                  setProfile({ ...profile, phone: e.target.value })
+                }
+              />
+              <input
+                className="profile-input"
+                placeholder="Major / Department"
+                value={profile.major}
+                onChange={(e) =>
+                  setProfile({ ...profile, major: e.target.value })
+                }
+              />
+
+              <button className="save-btn" onClick={handleSave}>
+                Save Changes
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

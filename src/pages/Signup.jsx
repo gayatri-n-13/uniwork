@@ -1,10 +1,6 @@
-// src/pages/Signup.jsx
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Auth.css";
-
-import { registerUser } from "../services/authService";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -12,37 +8,29 @@ export default function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [role, setRole] = useState("student");
   const [error, setError] = useState("");
 
-  const handleSignup = async () => {
-    try {
-      setError("");
+  const handleSignup = () => {
+    setError("");
 
-      if (!name || !email || !password) {
-        setError("Please fill out all fields.");
-        return;
-      }
-
-      if (password.length < 6) {
-        setError("Password must be at least 6 characters.");
-        return;
-      }
-
-      await registerUser(name, email, password);
-
-      navigate("/dashboard");
-
-    } catch (err) {
-      console.error(err);
-      setError("Signup failed. Email may already be in use.");
+    if (!name || !email || !password) {
+      setError("Please fill out all fields.");
+      return;
     }
+
+    // Save user info in localStorage
+    const newUser = { name, email, password, role };
+    localStorage.setItem("user", JSON.stringify(newUser));
+
+    // Redirect
+    if (role === "admin") navigate("/admin-dashboard");
+    else navigate("/student-dashboard");
   };
 
   return (
     <div className="auth-page">
       <div className="auth-box">
-
         <h2>Create Account</h2>
 
         {error && <p className="auth-error">{error}</p>}
@@ -71,6 +59,32 @@ export default function Signup() {
           onChange={(e) => setPassword(e.target.value)}
         />
 
+        <div className="role-select">
+          <label className="role-title">I am a:</label>
+
+          <div className="role-options">
+            <label>
+              <input
+                type="radio"
+                value="student"
+                checked={role === "student"}
+                onChange={() => setRole("student")}
+              />
+              Student
+            </label>
+
+            <label>
+              <input
+                type="radio"
+                value="admin"
+                checked={role === "admin"}
+                onChange={() => setRole("admin")}
+              />
+              Admin
+            </label>
+          </div>
+        </div>
+
         <button className="auth-btn" onClick={handleSignup}>
           Sign Up
         </button>
@@ -79,7 +93,6 @@ export default function Signup() {
           Already have an account?{" "}
           <span onClick={() => navigate("/")}>Sign In</span>
         </p>
-
       </div>
     </div>
   );

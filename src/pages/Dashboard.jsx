@@ -1,101 +1,109 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
 import "../styles/Dashboard.css";
-
-import { auth, db } from "../firebase";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
+  const navigate = useNavigate();
+
   const [applications, setApplications] = useState([]);
+  const [savedJobs, setSavedJobs] = useState([]);
+  const [profile, setProfile] = useState({});
   const [loading, setLoading] = useState(true);
 
-  // Load user applications from Firestore
   useEffect(() => {
-    const fetchApplications = async () => {
-      try {
-        const user = auth.currentUser;
-        if (!user) return;
+    const apps = JSON.parse(localStorage.getItem("applications")) || [];
+    const profileData = JSON.parse(localStorage.getItem("profile")) || {};
+    const saved = JSON.parse(localStorage.getItem("savedJobs")) || [];
 
-        const q = query(
-          collection(db, "applications"),
-          where("userId", "==", user.uid)
-        );
+    setApplications(apps);
+    setProfile(profileData);
+    setSavedJobs(saved);
 
-        const snapshot = await getDocs(q);
-
-        const apps = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-
-        setApplications(apps);
-        setLoading(false);
-
-      } catch (err) {
-        console.error("Error loading applications:", err);
-        setLoading(false);
-      }
-    };
-
-    fetchApplications();
+    setLoading(false);
   }, []);
 
-  const user = auth.currentUser;
-
-  // 🔥 FIX: Prevent crash while Firebase loads
-  if (!user) {
-    return (
-      <div className="dashboard-page">
-        <Navbar username="loading..." />
-        <div className="dashboard-container">
-          <p>Loading dashboard...</p>
-        </div>
-      </div>
-    );
-  }
+  const profileCompletion = () => {
+    let fields = ["name", "email", "address", "phone", "major"];
+    let filled = fields.filter((f) => profile[f] && profile[f] !== "").length;
+    return Math.round((filled / fields.length) * 100);
+  };
 
   return (
     <div className="dashboard-page">
-      <Navbar username={user.displayName || user.email} />
 
-      <div className="dashboard-container">
-        
-        <h1 className="welcome-title">
-          Welcome back, {user.displayName || user.email}!
-        </h1>
+      {/* Welcome Section */}
+      <h1 className="dash-title">Welcome back, {profile.name || "Student"}!</h1>
+      <p className="dash-subtitle">
+        Track your work-study journey and campus opportunities
+      </p>
 
-        <p className="welcome-sub">
-          Track your work-study journey and opportunities
-        </p>
+      {/* Stats Grid */}
+      <div className="dash-grid">
 
-        <div className="stats-row">
-          <div className="stat-card">
-            <p className="stat-title">Total Applications</p>
-            <h2 className="stat-number">{applications.length}</h2>
-          </div>
+        {/* Total Applications */}
+        <div className="dash-card">
+          <h3>Total Applications</h3>
+          <p className="stat-number">{applications.length}</p>
         </div>
 
-        <div className="quick-activity">
-          <div>
-            <h3>Recent Applications</h3>
-
-            {loading ? (
-              <p>Loading...</p>
-            ) : applications.length === 0 ? (
-              <p>You have not applied for any jobs yet.</p>
-            ) : (
-              <ul>
-                {applications.map((app) => (
-                  <li key={app.id}>
-                    <strong>{app.jobTitle}</strong> —
-                    applied on {new Date(app.appliedAt).toLocaleDateString()}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+        {/* Saved Jobs */}
+        <div className="dash-card">
+          <h3>Saved Jobs</h3>
+          <p className="stat-number">{savedJobs.length}</p>
         </div>
 
+        {/* Profile Completion */}
+        <div className="dash-card">
+          <h3>Profile Completion</h3>
+          <div className="progress-bar">
+            <div
+              className="progress-fill"
+              style={{ width: `${profileCompletion()}%` }}
+            ></div>
+          </div>
+          <p className="progress-text">{profileCompletion()}% completed</p>
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="quick-actions">
+        <button onClick={() => navigate("/jobs")} className="action-btn">
+          🔍 Browse Jobs
+        </button>
+
+        <button onClick={() => navigate("/profile")} className="action-btn">
+          👤 Edit Profile
+        </button>
+
+        <button
+          onClick={() => navigate("/dashboard")}
+          className="action-btn"
+          disabled
+        >
+          📄 View Applications (coming soon)
+        </button>
+      </div>
+
+      {/* Recent Applications */}
+      <h2 className="section-title">Recent Applications</h2>
+
+      <div className="recent-list">
+        {loading ? (
+          <p>Loading...</p>
+        ) : applications.length === 0 ? (
+          <p className="no-apps">No applications submitted yet.</p>
+        ) : (
+          applications
+            .slice(-3)
+            .reverse()
+            .map((app, index) => (
+              <div key={index} className="recent-card">
+                <h4>{app.jobTitle}</h4>
+                <p><strong>Applied on:</strong> {app.date}</p>
+                <p><strong>Status:</strong> Submitted</p>
+              </div>
+            ))
+        )}
       </div>
     </div>
   );

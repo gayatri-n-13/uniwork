@@ -2,67 +2,42 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../UniWorkLanding.css";
 
-// Firebase login service
-import { login } from "../services/authService";
-
 export default function UniWorkLanding() {
   const [showModal, setShowModal] = useState(false);
-
-  // login fields
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const navigate = useNavigate();
 
-  const openModal = () => setShowModal(true);
-  const closeModal = () => setShowModal(false);
+  const handleLogin = () => {
+    const savedUser = JSON.parse(localStorage.getItem("user"));
 
-  // ==========================
-  // REAL FIREBASE LOGIN LOGIC
-  // ==========================
-  const handleLogin = async () => {
-    try {
-      if (!email || !password) {
-        alert("Please fill all fields.");
-        return;
-      }
+    if (!savedUser) {
+      alert("No account found. Please sign up first.");
+      return;
+    }
 
-      await login(email, password);
-
-      closeModal();
-      navigate("/dashboard");
-
-    } catch (error) {
-      console.error(error);
-      alert("Invalid email or password. Please try again.");
+    if (email === savedUser.email && password === savedUser.password) {
+      if (savedUser.role === "admin") navigate("/admin-dashboard");
+      else navigate("/student-dashboard");
+    } else {
+      alert("Invalid email or password.");
     }
   };
 
   return (
     <div className="uniwork-page">
-
-      {/* NAVBAR */}
-      <nav className="navbar">
-        <div className="navbar-brand">UNIWORK🎓</div>
-
-        <div className="nav-links">
-          <span onClick={() => navigate("/")}>Home</span>
+      <nav className="nav">
+        <div className="nav-left">UNIWORK</div>
+        <div className="nav-center">
+          <a href="/">Home</a>
         </div>
-
         <div className="nav-right">
-          {/* SIGN UP ADDED */}
-          <button className="navbar-button" onClick={() => navigate("/signup")}>
-            Sign Up
-          </button>
-
-          {/* SIGN IN MODAL BUTTON */}
-          <button className="navbar-button" onClick={openModal}>
+          <button className="signout-btn" onClick={() => setShowModal(true)}>
             Sign In
           </button>
         </div>
       </nav>
 
-      {/* HERO SECTION WITH GIF */}
       <section className="hero-1">
         <div className="hero-overlay">
           <div className="hero-left">
@@ -71,59 +46,24 @@ export default function UniWorkLanding() {
 
             <p className="hero-text">
               Welcome to your all-in-one Work-Study Portal — where opportunities meet efficiency.
-              Students can discover exciting job listings, apply with ease, and track progress every
-              step of the way. Admins can post jobs, review applications, approve hours, and share
-              feedback — all from one seamless dashboard.
+              Students can discover job listings, apply easily, and track progress.
             </p>
 
-            {/* GET STARTED → GO TO SIGNUP */}
             <button className="hero-button" onClick={() => navigate("/signup")}>
               Get Started →
             </button>
-
           </div>
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="footer">
-        <div>
-          <h3 className="footer-title">uniwork</h3>
-          <p className="footer-text">
-            Connecting university students with meaningful work opportunities while streamlining
-            administrative processes for campus departments.
-          </p>
-        </div>
-
-        <div>
-          <h3 className="footer-title">Platform</h3>
-          <ul className="footer-list">
-            <li>Browse Jobs</li>
-            <li>Dashboard</li>
-          </ul>
-        </div>
-
-        <div>
-          <h3 className="footer-title">Support</h3>
-          <ul className="footer-list">
-            <li>Feedback</li>
-            <li>Help Center</li>
-          </ul>
-        </div>
-      </footer>
-
-      <div className="copy">
-        © 2024 uniwork. Empowering university work-study programs.
-      </div>
-
-      {/* LOGIN MODAL */}
+      {/* Login Modal */}
       {showModal && (
-        <div className="modal-overlay" onClick={closeModal}>
+        <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-box" onClick={(e) => e.stopPropagation()}>
             <h2 className="modal-title">Sign In</h2>
 
             <input
-              type="text"
+              type="email"
               placeholder="Email"
               className="input-field"
               value={email}
@@ -142,15 +82,12 @@ export default function UniWorkLanding() {
               Sign In
             </button>
 
-            <p className="forgot-text">Forgot your password?</p>
-
-            <button className="close-modal" onClick={closeModal}>
+            <button className="close-modal" onClick={() => setShowModal(false)}>
               Close
             </button>
           </div>
         </div>
       )}
-
     </div>
   );
 }
